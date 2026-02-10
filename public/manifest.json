@@ -1,0 +1,11 @@
+{
+  "name": "Our Journey - 4 Years of Us",
+  "short_name": "Our Journey",
+  "description": "A love story in 4 levels",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1a1a2e",
+  "theme_color": "#1a1a2e",
+  "icons": []
+}
