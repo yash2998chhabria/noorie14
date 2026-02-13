@@ -34,7 +34,7 @@ export function LevelSelect() {
           fontSize: 13, color: 'rgba(255,255,255,0.5)',
           textTransform: 'uppercase', letterSpacing: 2, marginBottom: 6,
         }}>
-          Our Journey
+          Yash & Noorie
         </div>
         <h2 style={{
           fontFamily: "'Quicksand', sans-serif",

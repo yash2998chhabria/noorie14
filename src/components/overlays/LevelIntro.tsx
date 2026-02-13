@@ -107,7 +107,7 @@ export function LevelIntro() {
         animate={phase >= 1 ? { opacity: 1, scale: 1 } : {}}
         transition={{ type: 'spring', damping: 10 }}
       >
-        {'\uD83C\uDFC3'}
+        {level.gameType === 'catch' ? '\uD83D\uDC95' : level.gameType === 'float' ? '\u2728' : '\uD83C\uDFC3'}
       </motion.div>
 
       <motion.h1

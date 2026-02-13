@@ -3,6 +3,8 @@ import { Renderer, LOGICAL_WIDTH, LOGICAL_HEIGHT } from '../engine/Renderer';
 import { Input } from '../engine/Input';
 import { FloatingText } from '../engine/FloatingText';
 import { RunnerLevel } from './levels/RunnerLevel';
+import { CatchLevel } from './levels/CatchLevel';
+import { FloatLevel } from './levels/FloatLevel';
 import type { LevelEngine, EventCallback, GameEvent } from './LevelEngine';
 import type { LevelConfig } from '../levels/types';
 
@@ -40,7 +42,19 @@ export class GameManager {
     this.dangerPulse = 0;
     this.currentLives = config.lives;
 
-    this.engine = new RunnerLevel(this.renderer, this.input, config);
+    switch (config.gameType) {
+      case 'catch':
+        this.engine = new CatchLevel(this.renderer, this.input, config);
+        break;
+      case 'float':
+        this.engine = new FloatLevel(this.renderer, this.input, config);
+        break;
+      case 'runner':
+      case 'dualLane':
+      default:
+        this.engine = new RunnerLevel(this.renderer, this.input, config);
+        break;
+    }
 
     // Intercept events for visual effects, then forward to caller
     this.engine.onEvent((event: GameEvent) => {

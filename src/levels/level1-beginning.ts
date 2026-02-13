@@ -122,13 +122,14 @@ export const level1: LevelConfig = {
   name: 'The Beginning',
   subtitle: 'A DM, a match, and a feeling',
   theme: 1,
-  gameType: 'runner',
+  gameType: 'catch',
   baseSpeed: 170,
   speedRamp: 2,
   maxSpeed: 240,
   lives: 3,
   segments,
   rapidSegmentIndices: [],
+  catchDuration: 55,
 
   // Act transitions
   herStartSegment: 4,
@@ -142,5 +143,5 @@ export const level1: LevelConfig = {
   ],
   memoryItems: ['year1-photo1', 'year1-photo2', 'year1-photo3'],
   duration: 100,
-  controlHint: 'Tap to jump! Hold to flutter (her sections)',
+  controlHint: 'Tap left or right to catch falling hearts!',
 };

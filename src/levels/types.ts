@@ -21,12 +21,14 @@ export interface Segment {
   storyEvent?: StoryEvent;
 }
 
+export type GameType = 'runner' | 'catch' | 'dualLane' | 'float';
+
 export interface LevelConfig {
   id: number;
   name: string;
   subtitle: string;
   theme: number;
-  gameType: 'runner';
+  gameType: GameType;
   lives: number;
   milestonePhotos: string[];
   milestoneMessages: string[];
@@ -34,7 +36,7 @@ export interface LevelConfig {
   duration: number;
   controlHint?: string;
 
-  // Runner config
+  // Runner / DualLane config
   baseSpeed: number;
   speedRamp: number;
   maxSpeed: number;
@@ -47,4 +49,12 @@ export interface LevelConfig {
   transition1Message: string;
   transition2Message: string;
   flutterGravity?: number; // default 600
+
+  // Catch game config
+  catchDuration?: number; // total seconds for catch game (default 55)
+
+  // Float game config
+  floatDuration?: number; // total seconds for float game (default 60)
+  floatBoost?: number;    // boost velocity on tap (default 350)
+  floatGravity?: number;  // downward pull (default 200)
 }

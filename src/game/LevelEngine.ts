@@ -1,6 +1,6 @@
 import type { PowerUpType } from '../levels/types';
 
-export type GameType = 'runner';
+export type GameType = 'runner' | 'catch' | 'dualLane' | 'float';
 
 export type ActType = 'his' | 'her' | 'together';
 

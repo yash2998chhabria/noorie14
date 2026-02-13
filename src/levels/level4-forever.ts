@@ -157,13 +157,16 @@ export const level4: LevelConfig = {
   name: 'Forever & Always',
   subtitle: 'Twin Peaks, that view, and the rest of forever',
   theme: 4,
-  gameType: 'runner',
+  gameType: 'float',
   baseSpeed: 240,
   speedRamp: 5,
   maxSpeed: 370,
   lives: 3,
   segments,
   rapidSegmentIndices: [3, 9],
+  floatDuration: 60,
+  floatBoost: 320,
+  floatGravity: 180,
 
   // Act transitions
   herStartSegment: 4,
@@ -177,5 +180,5 @@ export const level4: LevelConfig = {
   ],
   memoryItems: ['year4-photo1', 'year4-photo2', 'year4-photo3', 'year4-photo4', 'year4-photo5'],
   duration: 110,
-  controlHint: 'Tap to jump! Hold for flutter jump',
+  controlHint: 'Tap to boost up! Hold to float, dodge the clouds',
 };
