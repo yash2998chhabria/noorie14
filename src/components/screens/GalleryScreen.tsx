@@ -89,12 +89,28 @@ export function GalleryScreen() {
             >
               {isUnlocked ? (
                 photo.mediaType === 'video' ? (
-                  <video
-                    src={photo.src}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    muted
-                    playsInline
-                  />
+                  <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                    <video
+                      src={photo.src}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      muted
+                      playsInline
+                    />
+                    <div style={{
+                      position: 'absolute', inset: 0,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      background: 'rgba(0,0,0,0.25)',
+                    }}>
+                      <div style={{
+                        width: 28, height: 28, borderRadius: '50%',
+                        background: 'rgba(255,255,255,0.85)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: 14,
+                      }}>
+                        {'\u25B6\uFE0F'}
+                      </div>
+                    </div>
+                  </div>
                 ) : (
                   <img
                     src={photo.thumbnail}

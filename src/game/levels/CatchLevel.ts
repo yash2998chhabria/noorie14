@@ -558,14 +558,29 @@ export class CatchLevel implements LevelEngine {
       ctx.restore();
     }
 
-    // Subtle catch-zone glow
+    // Catch-zone glow — pulses with combo
     ctx.save();
-    const cg = ctx.createRadialGradient(this.playerX, PLAYER_Y, 5, this.playerX, PLAYER_Y, CATCH_RADIUS + 12);
-    cg.addColorStop(0, 'rgba(255,107,157,0.12)');
-    cg.addColorStop(1, 'rgba(255,107,157,0)');
+    const comboGlow = Math.min(this.combo / 15, 1);
+    const baseAlpha = 0.08 + comboGlow * 0.15;
+    const glowR = CATCH_RADIUS + 15 + Math.sin(this.elapsed * 3) * 5;
+    const cg = ctx.createRadialGradient(this.playerX, PLAYER_Y, 5, this.playerX, PLAYER_Y, glowR);
+    const glowColor = this.combo >= 9 ? '255,215,0' : '255,107,157';
+    cg.addColorStop(0, `rgba(${glowColor},${baseAlpha})`);
+    cg.addColorStop(1, `rgba(${glowColor},0)`);
     ctx.fillStyle = cg;
-    ctx.fillRect(this.playerX - 50, PLAYER_Y - 50, 100, 100);
+    ctx.fillRect(this.playerX - 60, PLAYER_Y - 60, 120, 120);
     ctx.restore();
+
+    // Together-act ambient petals
+    if (this.currentAct === 'together' && this.frame % 20 === 0) {
+      this.particles.emit({
+        x: Math.random() * LOGICAL_WIDTH,
+        y: -10,
+        count: 1, speed: 15,
+        color: ['#ff9eb5', '#ffb6c1', '#ffd700'],
+        shape: 'heart', life: 3.0, size: 3, gravity: 20,
+      });
+    }
   }
 
   private drawBad(ctx: CanvasRenderingContext2D, x: number, y: number, size: number, frame: number): void {

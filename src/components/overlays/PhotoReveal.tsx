@@ -87,13 +87,15 @@ export function PhotoReveal() {
                 style={{
                   position: 'absolute', inset: 0,
                   background: 'linear-gradient(135deg, #e0aaff, #9d4edd)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                   fontFamily: "'Quicksand', sans-serif",
                   color: '#fff', fontSize: 14, fontWeight: 600,
+                  gap: 8,
                 }}
                 animate={{ opacity: [1, 0.7, 1] }}
                 transition={{ repeat: Infinity, duration: 1.5 }}
               >
+                <span style={{ fontSize: 32 }}>{'\uD83D\uDCF7'}</span>
                 Tap to reveal
               </motion.div>
             )}

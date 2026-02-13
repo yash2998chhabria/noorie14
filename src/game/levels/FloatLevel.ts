@@ -61,6 +61,9 @@ export class FloatLevel implements LevelEngine {
 
   // Stars background
   private stars: Array<{ x: number; y: number; sz: number; tw: number }> = [];
+  // Shooting stars
+  private shootingStars: Array<{ x: number; y: number; vx: number; vy: number; life: number; maxLife: number }> = [];
+  private shootingStarTimer = 0;
 
   // Game state
   private score = 0;
@@ -168,6 +171,27 @@ export class FloatLevel implements LevelEngine {
 
     this.particles.update(dt);
     this.renderer.camera.update(dt);
+
+    // Shooting stars
+    this.shootingStarTimer += dt;
+    if (this.shootingStarTimer > 2.5 + Math.random() * 3) {
+      this.shootingStarTimer = 0;
+      this.shootingStars.push({
+        x: Math.random() * LOGICAL_WIDTH,
+        y: Math.random() * LOGICAL_HEIGHT * 0.4,
+        vx: 150 + Math.random() * 100,
+        vy: 60 + Math.random() * 40,
+        life: 0.8 + Math.random() * 0.5,
+        maxLife: 0.8 + Math.random() * 0.5,
+      });
+    }
+    for (let i = this.shootingStars.length - 1; i >= 0; i--) {
+      const ss = this.shootingStars[i];
+      ss.x += ss.vx * dt;
+      ss.y += ss.vy * dt;
+      ss.life -= dt;
+      if (ss.life <= 0) this.shootingStars.splice(i, 1);
+    }
 
     // Trail sparkle
     if (this.frame % 3 === 0) {
@@ -508,6 +532,31 @@ export class FloatLevel implements LevelEngine {
     }
     ctx.globalAlpha = 1;
 
+    // Shooting stars
+    for (const ss of this.shootingStars) {
+      const alpha = ss.life / ss.maxLife;
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.translate(ss.x, ss.y);
+      const angle = Math.atan2(ss.vy, ss.vx);
+      ctx.rotate(angle);
+      const len = 30 * alpha;
+      const grad = ctx.createLinearGradient(0, 0, -len, 0);
+      grad.addColorStop(0, '#fff');
+      grad.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(-len, 0);
+      ctx.stroke();
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.arc(0, 0, 2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
     // Nebula
     ctx.save();
     ctx.globalAlpha = 0.07;
@@ -658,6 +707,7 @@ export class FloatLevel implements LevelEngine {
     this.playerX = LOGICAL_WIDTH / 2;
     this.playerY = LOGICAL_HEIGHT * 0.45;
     this.playerVY = 0; this.scrollOffset = 0;
+    this.shootingStars.length = 0; this.shootingStarTimer = 0;
     if (this.config.memoryItems.length > 0) {
       this.nextMemTime = this.totalDuration / (this.config.memoryItems.length + 1);
     }
