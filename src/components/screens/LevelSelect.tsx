@@ -12,6 +12,13 @@ const themeGradients: Record<number, string> = {
   4: 'linear-gradient(135deg, #7C4DFF, #1A237E)',
 };
 
+const gameTypeLabels: Record<string, string> = {
+  catch: '\uD83D\uDC95 Catch',
+  runner: '\uD83C\uDFC3 Runner',
+  float: '\u2728 Float',
+  dualLane: '\uD83D\uDEE4\uFE0F Dual',
+};
+
 export function LevelSelect() {
   const { state, dispatch } = useGame();
 
@@ -88,6 +95,18 @@ export function LevelSelect() {
                     }}>
                       Year {level.id}
                     </div>
+                    {isUnlocked && (
+                      <div style={{
+                        fontFamily: "'Quicksand', sans-serif",
+                        fontSize: 10, fontWeight: 600,
+                        color: 'rgba(255,255,255,0.6)',
+                        background: 'rgba(0,0,0,0.2)',
+                        borderRadius: 8,
+                        padding: '2px 8px',
+                      }}>
+                        {gameTypeLabels[level.gameType] || level.gameType}
+                      </div>
+                    )}
                   </div>
                   <div style={{
                     fontFamily: "'Quicksand', sans-serif",

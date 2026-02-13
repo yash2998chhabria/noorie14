@@ -72,7 +72,7 @@ export function TitleScreen() {
             dispatch({ type: 'START_LEVEL', level: 1 });
           }
         }}>
-          {hasSave ? 'Continue' : 'Begin Our Story'}
+          {hasSave ? 'Continue Our Story' : 'Begin Our Story'}
         </Button>
 
         {hasSave && (

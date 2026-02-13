@@ -90,7 +90,7 @@ export function MilestoneScreen() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          Level Complete
+          Year {state.currentLevel} Complete
         </motion.h2>
 
         <motion.h1

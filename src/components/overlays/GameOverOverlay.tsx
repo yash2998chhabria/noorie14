@@ -9,9 +9,11 @@ const encouragements = [
   "Yash wouldn't give up on Noorie, and you shouldn't give up either",
   'Even the drive from San Jose couldn\'t stop them — try again!',
   "Noorie's waiting at the finish line, let's go",
-  'You survived living apart in San Jose, you can survive this level',
-  "The DM didn't get left on read, so don't leave this level unfinished",
+  'You survived living apart in San Jose, you can survive this year',
+  "The DM didn't get left on read, so don't leave this story unfinished",
   'Every great love story has a plot twist — this is yours',
+  'Four years of love, and you can\'t survive one level? Come on!',
+  'She said yes to the DM, now say yes to trying again',
 ];
 
 const font = "'Quicksand', sans-serif";

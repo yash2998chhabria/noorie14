@@ -44,6 +44,12 @@ export function LevelIntro() {
   }, [countdown, dispatch]);
 
   const controlHint = level.controlHint || 'Tap to jump! Hold for flutter jump';
+  const gameTypeDesc: Record<string, string> = {
+    catch: 'Catch falling hearts',
+    float: 'Soar through the stars',
+    runner: 'Run through the adventure',
+    dualLane: 'Two paths, one love',
+  };
 
   return (
     <div
@@ -137,6 +143,20 @@ export function LevelIntro() {
       >
         {level.subtitle}
       </motion.p>
+
+      <motion.div
+        style={{
+          marginTop: 8,
+          fontFamily: "'Quicksand', sans-serif",
+          fontSize: 12, color: 'rgba(255,255,255,0.5)',
+          textTransform: 'uppercase',
+          letterSpacing: 1.5,
+        }}
+        initial={{ opacity: 0 }}
+        animate={phase >= 2 ? { opacity: 0.5 } : {}}
+      >
+        {gameTypeDesc[level.gameType] || ''}
+      </motion.div>
 
       <motion.div
         style={{

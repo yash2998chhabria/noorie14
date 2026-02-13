@@ -28,7 +28,7 @@ export function GalleryScreen() {
           fontFamily: "'Quicksand', sans-serif",
           color: '#fff', fontSize: 22, fontWeight: 700, margin: 0,
         }}>
-          Gallery
+          Our Memories
         </h2>
         <Button variant="ghost" size="sm" onClick={() => dispatch({ type: 'SET_SCREEN', screen: 'title' })}>
           Back
