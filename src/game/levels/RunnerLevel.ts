@@ -100,6 +100,14 @@ export class RunnerLevel implements LevelEngine {
   private inGoldenCorridor = false;
   private goldenTimer = 0;
 
+  // Timer cleanup
+  private pendingTimers: ReturnType<typeof setTimeout>[] = [];
+
+  // Concert (theme 2) visuals
+  private bassPulseTimer = 0;
+  private musicNotes: Array<{ x: number; y: number; note: string; alpha: number; speed: number }> = [];
+  private musicNoteTimer = 0;
+
   constructor(renderer: Renderer, input: Input, config: LevelConfig) {
     this.renderer = renderer;
     this.input = input;
@@ -355,6 +363,33 @@ export class RunnerLevel implements LevelEngine {
 
     this.particles.update(dt);
 
+    // Concert visuals (theme 2)
+    if (this.config.theme === 2) {
+      this.bassPulseTimer += dt;
+      this.musicNoteTimer += dt;
+      if (this.musicNoteTimer > 0.5) {
+        this.musicNoteTimer = 0;
+        const notes = ['\u266A', '\u266B', '\u2669'];
+        const side = Math.random() > 0.5;
+        this.musicNotes.push({
+          x: side ? LOGICAL_WIDTH - 20 - Math.random() * 40 : 20 + Math.random() * 40,
+          y: GROUND_Y - 10,
+          note: notes[Math.floor(Math.random() * notes.length)],
+          alpha: 0.7,
+          speed: 40 + Math.random() * 30,
+        });
+      }
+      for (let i = this.musicNotes.length - 1; i >= 0; i--) {
+        const n = this.musicNotes[i];
+        n.y -= n.speed * dt;
+        n.alpha -= dt * 0.3;
+        n.x += Math.sin(n.y * 0.03) * 0.5;
+        if (n.alpha <= 0 || n.y < 0) {
+          this.musicNotes.splice(i, 1);
+        }
+      }
+    }
+
     const progress = Math.min(this.distance / this.totalDistance, 1);
     this.emit({ type: 'progress', percent: progress * 100 });
 
@@ -363,7 +398,7 @@ export class RunnerLevel implements LevelEngine {
       this.emit({ type: 'levelComplete' });
 
       for (let i = 0; i < 5; i++) {
-        setTimeout(() => {
+        this.pendingTimers.push(setTimeout(() => {
           this.particles.emit({
             x: LOGICAL_WIDTH * Math.random(),
             y: GROUND_Y * 0.3,
@@ -374,7 +409,7 @@ export class RunnerLevel implements LevelEngine {
             life: 1.5,
             size: 6,
           });
-        }, i * 200);
+        }, i * 200));
       }
       audio.playSynth('milestone');
       audio.haptic('heavy');
@@ -816,6 +851,11 @@ export class RunnerLevel implements LevelEngine {
       }
     }
 
+    // Concert effects (theme 2): bass pulse + music notes
+    if (this.config.theme === 2) {
+      this.renderConcertEffects(ctx);
+    }
+
     // Transition fade overlay (drawn in screen space, after camera)
     if (this.transition && this.transition.fadeAlpha > 0) {
       ctx.save();
@@ -953,21 +993,66 @@ export class RunnerLevel implements LevelEngine {
         ctx.shadowColor = accent;
         ctx.shadowBlur = 20;
         ctx.fillStyle = accent;
-        ctx.font = "italic 18px 'Quicksand', sans-serif";
+        ctx.font = "italic 16px 'Quicksand', sans-serif";
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.globalAlpha = textProgress * 0.4;
-        ctx.fillText(t.message, 0, 0);
+        wrapText(ctx, t.message, 0, 0, LOGICAL_WIDTH - 60, 22);
 
         // Main text
         ctx.shadowBlur = 8;
         ctx.shadowColor = 'rgba(0,0,0,0.5)';
         ctx.globalAlpha = textProgress;
         ctx.fillStyle = '#fff';
-        ctx.fillText(t.message, 0, 0);
+        wrapText(ctx, t.message, 0, 0, LOGICAL_WIDTH - 60, 22);
         ctx.restore();
       }
     }
+  }
+
+  private renderConcertEffects(ctx: CanvasRenderingContext2D): void {
+    // Bass pulse — subtle screen throb on beat (~120 BPM = 0.5s)
+    const beat = Math.sin(this.bassPulseTimer * Math.PI * 2 * 2); // 2 Hz = 120 BPM
+    if (beat > 0.7) {
+      ctx.save();
+      ctx.globalAlpha = (beat - 0.7) * 0.15;
+      ctx.fillStyle = '#ff00ff';
+      ctx.fillRect(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT);
+      ctx.restore();
+    }
+
+    // Neon light beams from top
+    for (let i = 0; i < 3; i++) {
+      const angle = Math.sin(this.elapsed * 0.8 + i * 2.1) * 0.35;
+      const bx = LOGICAL_WIDTH * (0.2 + i * 0.3);
+      ctx.save();
+      ctx.translate(bx, 0);
+      ctx.rotate(angle);
+      const beamGrad = ctx.createLinearGradient(0, 0, 0, GROUND_Y * 0.7);
+      const colors = ['#ff00ff', '#00ffff', '#7c4dff'];
+      beamGrad.addColorStop(0, colors[i] + '25');
+      beamGrad.addColorStop(1, colors[i] + '00');
+      ctx.fillStyle = beamGrad;
+      ctx.beginPath();
+      ctx.moveTo(-6, 0);
+      ctx.lineTo(-25, GROUND_Y * 0.7);
+      ctx.lineTo(25, GROUND_Y * 0.7);
+      ctx.lineTo(6, 0);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // Floating music notes
+    ctx.save();
+    ctx.font = "16px sans-serif";
+    ctx.textAlign = 'center';
+    for (const n of this.musicNotes) {
+      ctx.globalAlpha = n.alpha;
+      ctx.fillStyle = '#e0aaff';
+      ctx.fillText(n.note, n.x, n.y);
+    }
+    ctx.restore();
   }
 
   pause(): void { this.paused = true; }
@@ -1009,6 +1094,10 @@ export class RunnerLevel implements LevelEngine {
     // Reset golden corridor
     this.inGoldenCorridor = false;
     this.goldenTimer = 0;
+    // Reset concert visuals
+    this.bassPulseTimer = 0;
+    this.musicNotes.length = 0;
+    this.musicNoteTimer = 0;
     // Reset story events
     this.background.setStoryEvent(null);
   }
@@ -1027,6 +1116,29 @@ export class RunnerLevel implements LevelEngine {
   }
 
   destroy(): void {
+    this.pendingTimers.forEach(clearTimeout);
+    this.pendingTimers.length = 0;
     this.particles.clear();
+  }
+}
+
+function wrapText(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number): void {
+  const words = text.split(' ');
+  let line = '';
+  let lineY = y;
+  const lines: string[] = [];
+  for (const word of words) {
+    const test = line ? line + ' ' + word : word;
+    if (ctx.measureText(test).width > maxWidth && line) {
+      lines.push(line);
+      line = word;
+    } else {
+      line = test;
+    }
+  }
+  if (line) lines.push(line);
+  const startY = lineY - ((lines.length - 1) * lineHeight) / 2;
+  for (let i = 0; i < lines.length; i++) {
+    ctx.fillText(lines[i], x, startY + i * lineHeight);
   }
 }

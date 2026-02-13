@@ -97,9 +97,9 @@ export class GameManager {
       }
       case 'actChange': {
         const labels: Record<string, string> = {
-          his: 'His Story',
-          her: 'Her Story',
-          together: 'Together',
+          his: "Yash's Side",
+          her: "Noorie's Side",
+          together: 'Yash & Noorie',
         };
         this.floatingText.add(LOGICAL_WIDTH / 2, LOGICAL_HEIGHT * 0.25, labels[event.act], '#fff', 20);
         break;

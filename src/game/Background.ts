@@ -283,6 +283,8 @@ export class Background {
     // Theme-specific details
     if (this.theme === 1) {
       this.drawFlowers(ctx, offset, groundY);
+    } else if (this.theme === 2) {
+      this.drawConcertStage(ctx, groundY);
     } else if (this.theme === 3) {
       this.drawFallingLeaves(ctx);
     } else if (this.theme === 4) {
@@ -392,6 +394,38 @@ export class Background {
       }
       ctx.restore();
     }
+  }
+
+  private drawConcertStage(ctx: CanvasRenderingContext2D, groundY: number): void {
+    // Speaker stacks on edges
+    for (const sx of [15, LOGICAL_WIDTH - 30]) {
+      ctx.fillStyle = '#1a1a2e';
+      ctx.fillRect(sx, groundY - 35, 18, 35);
+      ctx.fillStyle = '#333';
+      ctx.fillRect(sx + 2, groundY - 33, 14, 14);
+      ctx.fillStyle = '#555';
+      ctx.beginPath();
+      ctx.arc(sx + 9, groundY - 26, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#333';
+      ctx.fillRect(sx + 2, groundY - 16, 14, 10);
+      ctx.fillStyle = '#555';
+      ctx.beginPath();
+      ctx.arc(sx + 9, groundY - 11, 3.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Pulsing floor neon strip
+    const pulse = Math.sin(this.time * Math.PI * 4) * 0.3 + 0.5;
+    ctx.save();
+    ctx.globalAlpha = pulse * 0.4;
+    const stripGrad = ctx.createLinearGradient(40, groundY - 2, LOGICAL_WIDTH - 40, groundY - 2);
+    stripGrad.addColorStop(0, '#ff00ff');
+    stripGrad.addColorStop(0.5, '#00ffff');
+    stripGrad.addColorStop(1, '#ff00ff');
+    ctx.fillStyle = stripGrad;
+    ctx.fillRect(40, groundY - 3, LOGICAL_WIDTH - 80, 3);
+    ctx.restore();
   }
 
   private drawFallingLeaves(ctx: CanvasRenderingContext2D): void {
