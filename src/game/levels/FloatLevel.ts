@@ -30,10 +30,10 @@ interface TransitionState {
 
 // ── Constants ──────────────────────────────────────────────────
 
-const DEFAULT_GRAVITY = 200;
-const DEFAULT_BOOST = 350;
-const PLAYER_X_SPEED = 220;
-const SCROLL_SPEED = 90;
+const DEFAULT_GRAVITY = 170;
+const DEFAULT_BOOST = 320;
+const PLAYER_X_SPEED = 240;
+const SCROLL_SPEED = 80;
 const SHIELD_DUR = 6;
 const MAGNET_DUR = 7;
 const MAGNET_RANGE = 120;
@@ -249,9 +249,9 @@ export class FloatLevel implements LevelEngine {
     this.input.consumeSuperJump();
     this.input.consumeTaps();
 
-    // Float effect while holding
-    if (this.input.isTouching && this.playerVY > -50) {
-      this.playerVY -= this.gravity * 0.6 * dt;
+    // Float effect while holding — stronger resistance for better feel
+    if (this.input.isTouching && this.playerVY > -80) {
+      this.playerVY -= this.gravity * 0.75 * dt;
     }
 
     // Gravity
@@ -365,7 +365,7 @@ export class FloatLevel implements LevelEngine {
   private spawnWave(diff: number): void {
     this.spawnItem('heart');
     if (Math.random() < (this.currentAct === 'together' ? 0.5 : 0.2)) this.spawnItem('heart');
-    if (Math.random() < 0.15 + diff * 0.3) this.spawnItem('cloud');
+    if (Math.random() < 0.1 + diff * 0.25) this.spawnItem('cloud');
     if (Math.random() < 0.08) this.spawnItem('star');
   }
 

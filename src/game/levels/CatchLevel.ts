@@ -32,14 +32,14 @@ interface TransitionState {
 
 // ── Constants ──────────────────────────────────────────────────
 
-const PLAYER_Y = 520;
-const PLAYER_SPEED = 280;
-const BASE_FALL_SPEED = 100;
-const MAX_FALL_SPEED = 210;
-const CATCH_RADIUS = 28;
-const SHIELD_DURATION = 6;
-const MAGNET_DURATION = 7;
-const MAGNET_RANGE = 110;
+const PLAYER_Y = 530;
+const PLAYER_SPEED = 300;
+const BASE_FALL_SPEED = 90;
+const MAX_FALL_SPEED = 190;
+const CATCH_RADIUS = 32;
+const SHIELD_DURATION = 7;
+const MAGNET_DURATION = 8;
+const MAGNET_RANGE = 130;
 
 const TRANS_DUR = { pose: 0.8, hearts: 0.8, text: 1.5, fadeOut: 0.5, fadeIn: 0.5 };
 
@@ -322,11 +322,11 @@ export class CatchLevel implements LevelEngine {
 
   private spawnWave(difficulty: number): void {
     this.spawn('heart');
-    if (Math.random() < (this.currentAct === 'together' ? 0.55 : 0.25))
+    if (Math.random() < (this.currentAct === 'together' ? 0.65 : 0.3))
       this.spawn('heart');
-    if (Math.random() < 0.2 + difficulty * 0.35)
+    if (Math.random() < 0.12 + difficulty * 0.3)
       this.spawn('bad');
-    if (Math.random() < 0.08)
+    if (Math.random() < 0.1)
       this.spawn('star');
   }
 
