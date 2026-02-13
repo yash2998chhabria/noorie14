@@ -11,6 +11,7 @@ export class Obstacle {
   type: ObstacleType = 'rock';
   active = false;
   theme = 1;
+  frame = 0;
 
   get aabb(): AABB {
     return { x: this.x, y: this.y, width: this.width, height: this.height };
@@ -21,6 +22,7 @@ export class Obstacle {
     this.type = type;
     this.theme = theme;
     this.active = true;
+    this.frame = 0;
 
     switch (size) {
       case 'small':
@@ -48,8 +50,12 @@ export class Obstacle {
     }
   }
 
+  update(_dt: number): void {
+    this.frame++;
+  }
+
   render(ctx: CanvasRenderingContext2D): void {
     if (!this.active) return;
-    drawObstacle(ctx, this.x, this.y, this.width, this.height, this.type, this.theme);
+    drawObstacle(ctx, this.x, this.y, this.width, this.height, this.type, this.theme, this.frame);
   }
 }

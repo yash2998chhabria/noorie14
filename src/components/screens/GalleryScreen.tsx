@@ -88,14 +88,20 @@ export function GalleryScreen() {
               onClick={() => isUnlocked && setSelectedPhoto(photo.id)}
             >
               {isUnlocked ? (
-                <div style={{
-                  width: '100%', height: '100%',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: 'linear-gradient(135deg, #ff6b9d30, #7c4dff30)',
-                  fontSize: 28,
-                }}>
-                  {'\uD83D\uDCF8'}
-                </div>
+                photo.mediaType === 'video' ? (
+                  <video
+                    src={photo.src}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    muted
+                    playsInline
+                  />
+                ) : (
+                  <img
+                    src={photo.thumbnail}
+                    alt={photo.caption}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                )
               ) : (
                 <div style={{
                   width: '100%', height: '100%',
@@ -150,12 +156,26 @@ export function GalleryScreen() {
             >
               <div style={{
                 width: 276, height: 220,
-                background: 'linear-gradient(135deg, #ff6b9d30, #7c4dff30)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 56,
                 borderRadius: 2,
+                overflow: 'hidden',
               }}>
-                {'\uD83D\uDCF8'}
+                {selectedEntry.mediaType === 'video' ? (
+                  <video
+                    src={selectedEntry.src}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    controls
+                  />
+                ) : (
+                  <img
+                    src={selectedEntry.src}
+                    alt={selectedEntry.caption}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                )}
               </div>
               <p style={{
                 fontFamily: "'Quicksand', sans-serif",

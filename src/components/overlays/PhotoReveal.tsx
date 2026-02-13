@@ -65,17 +65,24 @@ export function PhotoReveal() {
           }}
             onClick={() => setRevealed(true)}
           >
-            {/* Photo placeholder — shows gradient until user has real photos */}
-            <div style={{
-              width: '100%', height: '100%',
-              background: `linear-gradient(135deg, #ff6b9d40, #7c4dff40)`,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 48,
-            }}>
-              {revealed ? '\uD83D\uDCF8' : '\u2728'}
-            </div>
-
-            {!revealed && (
+            {revealed ? (
+              photo.mediaType === 'video' ? (
+                <video
+                  src={photo.src}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                />
+              ) : (
+                <img
+                  src={photo.src}
+                  alt={photo.caption}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              )
+            ) : (
               <motion.div
                 style={{
                   position: 'absolute', inset: 0,

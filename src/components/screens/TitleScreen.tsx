@@ -40,7 +40,7 @@ export function TitleScreen() {
           margin: 0,
           textShadow: '0 2px 20px rgba(255,107,157,0.5)',
         }}>
-          Our Journey
+          Yash & Noorie
         </h1>
 
         <motion.p
@@ -103,7 +103,7 @@ export function TitleScreen() {
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
       >
-        Made with love
+        Made with love, for my Noorie
       </motion.p>
     </div>
   );

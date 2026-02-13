@@ -25,7 +25,7 @@ export class AudioManager {
     return this.audioCtx;
   }
 
-  playSynth(type: 'jump' | 'collect' | 'hit' | 'combo' | 'milestone' | 'click' | 'upgrade'): void {
+  playSynth(type: 'jump' | 'collect' | 'hit' | 'combo' | 'milestone' | 'click' | 'upgrade' | 'drop' | 'perfect' | 'shield' | 'block' | 'starTap' | 'lineComplete' | 'firework' | 'magnet' | 'slowtime'): void {
     if (this.muted) return;
 
     try {
@@ -113,6 +113,110 @@ export class AudioManager {
           osc.start(now);
           osc.stop(now + 0.3);
           break;
+        case 'drop': {
+          // Thud sound for block dropping
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(150, now);
+          osc.frequency.linearRampToValueAtTime(60, now + 0.15);
+          gain.gain.setValueAtTime(this.sfxVolume * 0.4, now);
+          gain.gain.linearRampToValueAtTime(0, now + 0.2);
+          osc.start(now);
+          osc.stop(now + 0.2);
+          break;
+        }
+        case 'perfect': {
+          // Sparkly perfect-alignment chime
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(880, now);
+          osc.frequency.setValueAtTime(1108, now + 0.08);
+          osc.frequency.setValueAtTime(1320, now + 0.16);
+          gain.gain.setValueAtTime(this.sfxVolume * 0.3, now);
+          gain.gain.linearRampToValueAtTime(0, now + 0.35);
+          osc.start(now);
+          osc.stop(now + 0.35);
+          break;
+        }
+        case 'shield': {
+          // Quick metallic shield activation
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(300, now);
+          osc.frequency.linearRampToValueAtTime(500, now + 0.05);
+          gain.gain.setValueAtTime(this.sfxVolume * 0.15, now);
+          gain.gain.linearRampToValueAtTime(0, now + 0.1);
+          osc.start(now);
+          osc.stop(now + 0.1);
+          break;
+        }
+        case 'block': {
+          // Shield successfully blocking an obstacle
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(400, now);
+          osc.frequency.linearRampToValueAtTime(600, now + 0.06);
+          gain.gain.setValueAtTime(this.sfxVolume * 0.25, now);
+          gain.gain.linearRampToValueAtTime(0, now + 0.12);
+          osc.start(now);
+          osc.stop(now + 0.12);
+          break;
+        }
+        case 'starTap': {
+          // Gentle star chime
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(700, now);
+          osc.frequency.linearRampToValueAtTime(1100, now + 0.12);
+          gain.gain.setValueAtTime(this.sfxVolume * 0.25, now);
+          gain.gain.linearRampToValueAtTime(0, now + 0.25);
+          osc.start(now);
+          osc.stop(now + 0.25);
+          break;
+        }
+        case 'lineComplete': {
+          // Constellation completion - ascending arpeggio
+          osc.type = 'sine';
+          const cNotes = [660, 880, 1100, 1320, 1760];
+          cNotes.forEach((n, i) => {
+            osc.frequency.setValueAtTime(n, now + i * 0.1);
+          });
+          gain.gain.setValueAtTime(this.sfxVolume * 0.3, now);
+          gain.gain.linearRampToValueAtTime(0, now + 0.6);
+          osc.start(now);
+          osc.stop(now + 0.6);
+          break;
+        }
+        case 'firework': {
+          // Firework burst - noise-like with rising pitch
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(200, now);
+          osc.frequency.linearRampToValueAtTime(1500, now + 0.15);
+          osc.frequency.linearRampToValueAtTime(100, now + 0.4);
+          gain.gain.setValueAtTime(this.sfxVolume * 0.2, now);
+          gain.gain.linearRampToValueAtTime(this.sfxVolume * 0.35, now + 0.15);
+          gain.gain.linearRampToValueAtTime(0, now + 0.5);
+          osc.start(now);
+          osc.stop(now + 0.5);
+          break;
+        }
+        case 'magnet': {
+          // Ascending chime 500->900Hz
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(500, now);
+          osc.frequency.linearRampToValueAtTime(900, now + 0.12);
+          gain.gain.setValueAtTime(this.sfxVolume * 0.25, now);
+          gain.gain.linearRampToValueAtTime(0, now + 0.2);
+          osc.start(now);
+          osc.stop(now + 0.2);
+          break;
+        }
+        case 'slowtime': {
+          // Descending tone 800->400Hz triangle
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(800, now);
+          osc.frequency.linearRampToValueAtTime(400, now + 0.2);
+          gain.gain.setValueAtTime(this.sfxVolume * 0.25, now);
+          gain.gain.linearRampToValueAtTime(0, now + 0.3);
+          osc.start(now);
+          osc.stop(now + 0.3);
+          break;
+        }
       }
     } catch {
       // Audio not available, silently fail

@@ -169,10 +169,15 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     return () => clearInterval(interval);
   }, [state]);
 
-  // Save on unload
+  // Save on unload — reset transient game state so it doesn't persist
   useEffect(() => {
     const onUnload = () => {
       const { screen, gameRunning, pendingMemory, ...saveable } = state;
+      // Reset transient per-level state so a reload doesn't carry stale values
+      saveable.lives = 3;
+      saveable.score = 0;
+      saveable.combo = 0;
+      saveable.progress = 0;
       localStorage.setItem(SAVE_KEY, JSON.stringify(saveable));
     };
     window.addEventListener('beforeunload', onUnload);

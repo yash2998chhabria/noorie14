@@ -1,15 +1,28 @@
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef, useEffect, useCallback, useMemo, useState } from 'react';
 import { useGame } from '../../state/GameContext';
 import { GameManager } from '../../game/GameManager';
 import { getLevel } from '../../levels';
 import { GameHUD } from '../hud/GameHUD';
-import type { GameEvent } from '../../game/LevelRunner';
+import type { GameEvent, ActType } from '../../game/LevelEngine';
+
+const themeBackgrounds: Record<number, string> = {
+  1: 'linear-gradient(180deg, #1a3a1a 0%, #0d1f0d 100%)',
+  2: 'linear-gradient(180deg, #3d2200 0%, #1a0f00 100%)',
+  3: 'linear-gradient(180deg, #2a1a3d 0%, #0f0a1a 100%)',
+  4: 'linear-gradient(180deg, #0a0a2e 0%, #050515 100%)',
+};
 
 export function GameScreen() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameRef = useRef<GameManager | null>(null);
   const { state, dispatch } = useGame();
   const levelConfig = getLevel(state.currentLevel);
+  const [currentAct, setCurrentAct] = useState<ActType>('his');
+
+  const bgGradient = useMemo(
+    () => themeBackgrounds[levelConfig.theme] || themeBackgrounds[1],
+    [levelConfig.theme],
+  );
 
   const handleEvent = useCallback((event: GameEvent) => {
     switch (event.type) {
@@ -38,6 +51,9 @@ export function GameScreen() {
       case 'levelComplete':
         dispatch({ type: 'COMPLETE_LEVEL', level: state.currentLevel });
         break;
+      case 'actChange':
+        setCurrentAct(event.act);
+        break;
     }
   }, [dispatch, state.currentLevel]);
 
@@ -45,6 +61,7 @@ export function GameScreen() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    setCurrentAct('his');
     const gm = new GameManager(canvas);
     gameRef.current = gm;
     gm.startLevel(levelConfig, handleEvent);
@@ -72,8 +89,8 @@ export function GameScreen() {
   return (
     <div style={{
       position: 'fixed', inset: 0,
-      background: '#000',
-      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+      background: bgGradient,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
       touchAction: 'none',
     }}>
       <canvas
@@ -83,6 +100,8 @@ export function GameScreen() {
           touchAction: 'none',
           userSelect: 'none',
           WebkitUserSelect: 'none',
+          borderRadius: 12,
+          boxShadow: '0 0 40px rgba(0,0,0,0.5)',
         }}
       />
       <GameHUD
@@ -91,6 +110,7 @@ export function GameScreen() {
         combo={state.combo}
         progress={state.progress}
         levelName={levelConfig.name}
+        currentAct={currentAct}
       />
     </div>
   );

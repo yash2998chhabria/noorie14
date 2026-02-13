@@ -1,19 +1,24 @@
 import type { ObstacleType, CollectibleType } from '../engine/Sprites';
 
+export type PowerUpType = 'shield' | 'magnet' | 'slowtime';
+
+export type StoryEvent = 'flowers_bloom' | 'rainbow_appear' | 'rain_clear' | 'fireworks' | 'shooting_stars';
+
 export interface SpawnItem {
-  type: 'obstacle' | 'collectible';
+  type: 'obstacle' | 'collectible' | 'powerup';
   obstacleType?: ObstacleType;
   collectibleType?: CollectibleType;
+  powerUpType?: PowerUpType;
   size?: 'small' | 'medium' | 'large';
-  yOffset?: number; // for collectibles, offset from default height
-  memoryId?: string; // for memory items
+  yOffset?: number;
+  memoryId?: string;
 }
 
 export interface Segment {
-  /** items positioned by relative offset within the segment */
   items: Array<{ offset: number } & SpawnItem>;
-  /** length of this segment in pixels */
   length: number;
+  golden?: boolean;
+  storyEvent?: StoryEvent;
 }
 
 export interface LevelConfig {
@@ -21,16 +26,25 @@ export interface LevelConfig {
   name: string;
   subtitle: string;
   theme: number;
-  baseSpeed: number;
-  speedRamp: number; // speed increase per second
-  maxSpeed: number;
+  gameType: 'runner';
   lives: number;
-  segments: Segment[];
-  /** indices of segments that are "rapid sections" (increased density/speed) */
-  rapidSegmentIndices: number[];
   milestonePhotos: string[];
   milestoneMessages: string[];
-  /** memory item IDs found in this level */
   memoryItems: string[];
-  duration: number; // approximate level duration in seconds
+  duration: number;
+  controlHint?: string;
+
+  // Runner config
+  baseSpeed: number;
+  speedRamp: number;
+  maxSpeed: number;
+  segments: Segment[];
+  rapidSegmentIndices?: number[];
+
+  // Act transition config
+  herStartSegment: number;
+  togetherStartSegment: number;
+  transition1Message: string;
+  transition2Message: string;
+  flutterGravity?: number; // default 600
 }
