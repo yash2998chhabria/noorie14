@@ -101,6 +101,9 @@ export class CatchLevel implements LevelEngine {
   private invincible = false;
   private invincibleTimer = 0;
 
+  // Timer cleanup
+  private pendingTimers: ReturnType<typeof setTimeout>[] = [];
+
   private eventCallback: EventCallback | null = null;
 
   constructor(renderer: Renderer, input: Input, config: LevelConfig) {
@@ -174,7 +177,7 @@ export class CatchLevel implements LevelEngine {
       this.completed = true;
       this.emit({ type: 'levelComplete' });
       for (let i = 0; i < 5; i++) {
-        setTimeout(() => {
+        this.pendingTimers.push(setTimeout(() => {
           this.particles.emit({
             x: LOGICAL_WIDTH * Math.random(),
             y: LOGICAL_HEIGHT * 0.3,
@@ -184,7 +187,7 @@ export class CatchLevel implements LevelEngine {
             shape: Math.random() > 0.5 ? 'heart' : 'star',
             life: 1.5, size: 6,
           });
-        }, i * 200);
+        }, i * 200));
       }
       audio.playSynth('milestone');
       audio.haptic('heavy');
@@ -687,7 +690,11 @@ export class CatchLevel implements LevelEngine {
     };
   }
 
-  destroy(): void { this.particles.clear(); }
+  destroy(): void {
+    this.pendingTimers.forEach(clearTimeout);
+    this.pendingTimers.length = 0;
+    this.particles.clear();
+  }
 }
 
 function wrapText(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number): void {

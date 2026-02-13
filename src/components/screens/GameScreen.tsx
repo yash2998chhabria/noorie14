@@ -73,8 +73,14 @@ export function GameScreen() {
     };
   }, [levelConfig, handleEvent, dispatch]);
 
-  // Pause/resume on visibility change
+  // Pause/resume on visibility change and memory overlay
   useEffect(() => {
+    if (state.pendingMemory) {
+      gameRef.current?.pause();
+    } else if (!document.hidden) {
+      gameRef.current?.resume();
+    }
+
     const onVisibility = () => {
       if (document.hidden) {
         gameRef.current?.pause();
@@ -84,15 +90,6 @@ export function GameScreen() {
     };
     document.addEventListener('visibilitychange', onVisibility);
     return () => document.removeEventListener('visibilitychange', onVisibility);
-  }, [state.pendingMemory]);
-
-  // Pause game when memory photo is revealed
-  useEffect(() => {
-    if (state.pendingMemory) {
-      gameRef.current?.pause();
-    } else {
-      gameRef.current?.resume();
-    }
   }, [state.pendingMemory]);
 
   return (
