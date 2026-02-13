@@ -34,12 +34,6 @@ export const HER_STYLE: CharacterStyle = {
   accessory: 'bow',
 };
 
-// Legacy constants for backward compat
-const SKIN = '#ffcc99';
-const HAIR = '#4a3728';
-const SHIRT = '#ff6b9d';
-const PANTS = '#5b7db1';
-const SHOE = '#333';
 
 export function drawPlayer(
   ctx: CanvasRenderingContext2D,
@@ -795,12 +789,3 @@ export function getThemeColors(level: number): ThemeColors {
   }
 }
 
-function shadeColor(color: string, amount: number): string {
-  let r = parseInt(color.slice(1, 3), 16);
-  let g = parseInt(color.slice(3, 5), 16);
-  let b = parseInt(color.slice(5, 7), 16);
-  r = Math.max(0, Math.min(255, r + amount));
-  g = Math.max(0, Math.min(255, g + amount));
-  b = Math.max(0, Math.min(255, b + amount));
-  return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
-}

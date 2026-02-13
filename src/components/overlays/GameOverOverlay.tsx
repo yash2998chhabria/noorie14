@@ -2,7 +2,7 @@
 import { motion } from 'framer-motion';
 import { useMemo } from 'react';
 import { useGame } from '../../state/GameContext';
-import { getLevel } from '../../levels';
+
 import { Button } from '../shared/Button';
 
 const encouragements = [
@@ -46,7 +46,6 @@ function StatBox({ value, label, color, delay }: { value: string; label: string;
 
 export function GameOverOverlay() {
   const { state, dispatch } = useGame();
-  const level = getLevel(state.currentLevel);
   const encouragement = useMemo(
     () => encouragements[Math.floor(Math.random() * encouragements.length)],
     [],
