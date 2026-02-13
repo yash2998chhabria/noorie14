@@ -32,6 +32,8 @@ export interface GameState {
   muted: boolean;
   // Game running state
   gameRunning: boolean;
+  // Per-run hearts counter
+  runHearts: number;
   // Pending photo reveal
   pendingMemory: string | null;
 }
@@ -54,6 +56,7 @@ const initialState: GameState = {
   clickerUpgrades: {},
   muted: false,
   gameRunning: false,
+  runHearts: 0,
   pendingMemory: null,
 };
 
@@ -82,7 +85,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
     case 'SET_SCREEN':
       return { ...state, screen: action.screen };
     case 'START_LEVEL':
-      return { ...state, currentLevel: action.level, screen: 'levelIntro', score: 0, combo: 0, progress: 0, lives: 3 };
+      return { ...state, currentLevel: action.level, screen: 'levelIntro', score: 0, combo: 0, progress: 0, lives: 3, runHearts: 0 };
     case 'COMPLETE_LEVEL': {
       const completed = state.levelsCompleted.includes(action.level)
         ? state.levelsCompleted
@@ -94,7 +97,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
     case 'ADD_SCORE':
       return { ...state, score: state.score + action.points };
     case 'ADD_HEARTS':
-      return { ...state, totalHearts: state.totalHearts + action.amount };
+      return { ...state, totalHearts: state.totalHearts + action.amount, runHearts: state.runHearts + action.amount };
     case 'SET_COMBO':
       return { ...state, combo: action.count };
     case 'SET_LIVES':

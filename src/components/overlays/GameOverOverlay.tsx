@@ -109,7 +109,7 @@ export function GameOverOverlay() {
           transition={{ delay: 0.4 }}
         >
           <StatBox value={state.score.toLocaleString()} label="Score" color="#ff9eb5" delay={0.5} />
-          <StatBox value={String(state.totalHearts)} label="Hearts" color="#ff6b9d" delay={0.65} />
+          <StatBox value={String(state.runHearts)} label="Hearts" color="#ff6b9d" delay={0.65} />
           <StatBox value={`${Math.round(state.progress)}%`} label="Progress" color="#b388ff" delay={0.8} />
         </motion.div>
 

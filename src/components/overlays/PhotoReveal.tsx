@@ -7,6 +7,13 @@ import { Button } from '../shared/Button';
 export function PhotoReveal() {
   const { state, dispatch } = useGame();
   const [revealed, setRevealed] = useState(false);
+  const [revealedId, setRevealedId] = useState<string | null>(null);
+
+  // Reset revealed state when a new memory appears
+  if (state.pendingMemory && state.pendingMemory !== revealedId) {
+    setRevealed(false);
+    setRevealedId(state.pendingMemory);
+  }
 
   if (!state.pendingMemory) return null;
 
@@ -72,8 +79,8 @@ export function PhotoReveal() {
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   autoPlay
                   loop
-                  muted
                   playsInline
+                  controls
                 />
               ) : (
                 <img
