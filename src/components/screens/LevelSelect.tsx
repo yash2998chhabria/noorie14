@@ -16,7 +16,15 @@ const gameTypeLabels: Record<string, string> = {
   catch: '\uD83D\uDC95 Catch',
   runner: '\uD83C\uDFC3 Runner',
   float: '\u2728 Float',
-  dualLane: '\uD83D\uDEE4\uFE0F Dual',
+  dualLane: '\uD83D\uDEE4\uFE0F Dual Lane',
+};
+
+// Per-level override labels for more personality
+const levelGameLabels: Record<number, string> = {
+  1: '\uD83D\uDC95 Catch Hearts',
+  2: '\uD83C\uDFB5 Concert Run',
+  3: '\u26C8\uFE0F Storm Run',
+  4: '\u2728 Sky Float',
 };
 
 export function LevelSelect() {
@@ -104,7 +112,7 @@ export function LevelSelect() {
                         borderRadius: 8,
                         padding: '2px 8px',
                       }}>
-                        {gameTypeLabels[level.gameType] || level.gameType}
+                        {levelGameLabels[level.id] || gameTypeLabels[level.gameType] || level.gameType}
                       </div>
                     )}
                   </div>

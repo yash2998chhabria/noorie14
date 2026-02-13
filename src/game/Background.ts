@@ -26,6 +26,8 @@ export class Background {
   // Rain state (L3 — rain during His/Her, clears on Together)
   private rainActive = false;
   private rainIntensity = 0;
+  private lightningTimer = 0;
+  private lightningFlash = 0;
 
   // Flower bloom state
   private flowerCount = 8;
@@ -119,6 +121,19 @@ export class Background {
       }
     }
 
+    // Lightning for theme 3 during rain
+    if (this.theme === 3 && this.rainActive && this.rainIntensity > 0.3) {
+      this.lightningTimer += dt;
+      if (this.lightningTimer > 4 + Math.random() * 6) {
+        this.lightningTimer = 0;
+        this.lightningFlash = 0.6;
+        audio.playSynth('block'); // thunder sound
+      }
+      if (this.lightningFlash > 0) {
+        this.lightningFlash = Math.max(0, this.lightningFlash - dt * 4);
+      }
+    }
+
     // Update shooting stars
     for (let i = this.shootingStars.length - 1; i >= 0; i--) {
       const s = this.shootingStars[i];
@@ -168,6 +183,15 @@ export class Background {
     // Rain (L3 His/Her acts, or fading during rain_clear)
     if (this.rainActive && this.rainIntensity > 0) {
       drawRain(ctx, W, groundY + 40, this.rainIntensity, this.frame);
+    }
+
+    // Lightning flash overlay (theme 3)
+    if (this.lightningFlash > 0) {
+      ctx.save();
+      ctx.globalAlpha = this.lightningFlash * 0.35;
+      ctx.fillStyle = '#e0e0ff';
+      ctx.fillRect(0, 0, W, groundY);
+      ctx.restore();
     }
 
     // Sunbeam after rain clears
