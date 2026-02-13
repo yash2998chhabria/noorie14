@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGame } from '../../state/GameContext';
 import { getPhotoById } from '../../data/photos';
@@ -15,6 +15,15 @@ export function PhotoReveal() {
     setRevealedId(state.pendingMemory);
   }
 
+  const dismiss = useCallback(() => {
+    dispatch({ type: 'SET_PENDING_MEMORY', id: null });
+  }, [dispatch]);
+
+  const reveal = useCallback((e: React.MouseEvent | React.TouchEvent) => {
+    e.stopPropagation();
+    setRevealed(true);
+  }, []);
+
   if (!state.pendingMemory) return null;
 
   const photo = getPhotoById(state.pendingMemory);
@@ -26,6 +35,7 @@ export function PhotoReveal() {
   return (
     <AnimatePresence>
       <motion.div
+        key={state.pendingMemory}
         style={{
           position: 'fixed', inset: 0,
           background: 'rgba(0,0,0,0.85)',
@@ -33,10 +43,13 @@ export function PhotoReveal() {
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
           zIndex: 60,
           padding: 20,
+          touchAction: 'auto',
         }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
+        onClick={(e) => e.stopPropagation()}
+        onTouchStart={(e) => e.stopPropagation()}
       >
         <motion.div
           style={{ fontSize: 14, color: '#e0aaff', fontFamily: "'Quicksand', sans-serif", marginBottom: 16, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 2 }}
@@ -70,11 +83,13 @@ export function PhotoReveal() {
             position: 'relative',
             cursor: 'pointer',
           }}
-            onClick={() => setRevealed(true)}
+            onClick={reveal}
+            onTouchEnd={reveal}
           >
             {revealed ? (
               photo.mediaType === 'video' ? (
                 <video
+                  key={photo.id}
                   src={photo.src}
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   autoPlay
@@ -131,7 +146,7 @@ export function PhotoReveal() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
         >
-          <Button variant="ghost" onClick={() => dispatch({ type: 'SET_PENDING_MEMORY', id: null })}>
+          <Button variant="ghost" onClick={dismiss}>
             Continue
           </Button>
         </motion.div>

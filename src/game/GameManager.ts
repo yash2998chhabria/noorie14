@@ -93,6 +93,8 @@ export class GameManager {
       case 'memory': {
         this.floatingText.add(LOGICAL_WIDTH / 2, LOGICAL_HEIGHT * 0.3, 'MEMORY UNLOCKED', '#e0aaff', 18);
         this.flash('#e0aaff', 0.3);
+        // Immediately pause so the overlay appears without extra frames running
+        this.engine?.pause();
         break;
       }
       case 'actChange': {

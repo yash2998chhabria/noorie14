@@ -98,6 +98,7 @@ export function GameScreen() {
       background: bgGradient,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       touchAction: 'none',
+      zIndex: 1,
     }}>
       <canvas
         ref={canvasRef}

@@ -85,7 +85,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
     case 'SET_SCREEN':
       return { ...state, screen: action.screen };
     case 'START_LEVEL':
-      return { ...state, currentLevel: action.level, screen: 'levelIntro', score: 0, combo: 0, progress: 0, lives: 3, runHearts: 0 };
+      return { ...state, currentLevel: action.level, screen: 'levelIntro', score: 0, combo: 0, progress: 0, lives: 3, runHearts: 0, pendingMemory: null };
     case 'COMPLETE_LEVEL': {
       const completed = state.levelsCompleted.includes(action.level)
         ? state.levelsCompleted
