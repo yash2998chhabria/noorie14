@@ -92,7 +92,12 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         : [...state.levelsCompleted, action.level];
       // Convert hearts to LP
       const lpBonus = state.totalHearts * 2;
-      return { ...state, levelsCompleted: completed, lovePoints: state.lovePoints + lpBonus, screen: 'milestone', gameRunning: false };
+      // Auto-unlock milestone photo for this year
+      const milestoneId = `year${action.level}-milestone`;
+      const photos = state.unlockedPhotos.includes(milestoneId)
+        ? state.unlockedPhotos
+        : [...state.unlockedPhotos, milestoneId];
+      return { ...state, levelsCompleted: completed, unlockedPhotos: photos, lovePoints: state.lovePoints + lpBonus, screen: 'milestone', gameRunning: false };
     }
     case 'ADD_SCORE':
       return { ...state, score: state.score + action.points };

@@ -50,6 +50,12 @@ export function LevelIntro() {
     runner: 'Run through the adventure',
     dualLane: 'Two paths, one love',
   };
+  const levelDesc: Record<number, string> = {
+    1: 'Catch the hearts that started it all',
+    2: 'Run through the concert of your lives',
+    3: 'Run through the storm — love conquers all',
+    4: 'Float through the stars to your forever',
+  };
 
   return (
     <div
@@ -155,7 +161,7 @@ export function LevelIntro() {
         initial={{ opacity: 0 }}
         animate={phase >= 2 ? { opacity: 0.5 } : {}}
       >
-        {gameTypeDesc[level.gameType] || ''}
+        {levelDesc[level.id] || gameTypeDesc[level.gameType] || ''}
       </motion.div>
 
       <motion.div
